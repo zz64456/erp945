@@ -349,7 +349,7 @@ class Transfers_model extends CI_Model
                 $warehouse_quantity = $this->getWarehouseProduct($transfer->from_warehouse_id, $item['product_id'], $item['option_id']);
                 if ($warehouse_quantity->quantity < $item['quantity']) {
                     $this->db->trans_rollback();
-                    throw new \Exception(lang('no_match_found') . ' (' . lang('product_name') . ' <strong>' . $product_details->name . '</strong> ' . lang('product_code') . ' <strong>' . $product_details->code . '</strong>)');
+                    throw new \Exception(lang('no_match_found') . ' (' . lang('product_name') . ' <strong>' . $item->name . '</strong> ' . lang('product_code') . ' <strong>' . $item->code . '</strong>)');
                 }
                 $item['transfer_id'] = $id;
                 $item['option_id']   = !empty($item['option_id']) && is_numeric($item['option_id']) ? $item['option_id'] : null;
@@ -395,10 +395,18 @@ class Transfers_model extends CI_Model
 
             foreach ($items as $item) {
                 $warehouse_quantity = $this->getWarehouseProduct($data['from_warehouse_id'], $item['product_id'], $item['option_id']);
-                if ($warehouse_quantity->quantity < $item['quantity']) {
+
+                // Neil: add ordered quantity back before comparison
+                $warehouse_quantity_after_add_back = $warehouse_quantity->quantity + $item['ordered_quantity'];
+
+                if ($warehouse_quantity_after_add_back < $item['quantity']) {
                     $this->db->trans_rollback();
-                    throw new \Exception(lang('no_match_found') . ' (' . lang('product_name') . ' <strong>' . $product_details->name . '</strong> ' . lang('product_code') . ' <strong>' . $product_details->code . '</strong>)');
+                    throw new \Exception(lang('no_match_found') . ' (' . lang('product_name') . ' <strong>' . $item->name . '</strong> ' . lang('product_code') . ' <strong>' . $item->code . '</strong>)');
                 }
+
+                // remove index: ordered_quantity
+                unset($item['ordered_quantity']);
+
                 $item['transfer_id'] = $id;
                 $item['option_id']   = !empty($item['option_id']) && is_numeric($item['option_id']) ? $item['option_id'] : null;
                 if ($status == 'completed') {

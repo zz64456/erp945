@@ -343,6 +343,7 @@ class Transfers extends MY_Controller
                         'quantity'          => $item_quantity,
                         'product_unit_id'   => $item_unit,
                         'product_unit_code' => $unit->code,
+                        'ordered_quantity'  => $ordered_quantity,
                         'unit_quantity'     => $item_unit_quantity,
                         'quantity_balance'  => $balance_qty,
                         'warehouse_id'      => $to_warehouse,
