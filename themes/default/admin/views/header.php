@@ -978,6 +978,12 @@
                                             <i class="fa fa-plus-circle"></i><span class="text"> <?= lang('add_product'); ?></span>
                                         </a>
                                     </li>
+                                        <li id="products_import_csv">
+                                            <a class="submenu" href="<?= admin_url('products/import_csv'); ?>">
+                                                <i class="fa fa-file-text"></i>
+                                                <span class="text"> <?= lang('import_products'); ?></span>
+                                            </a>
+                                        </li>
                                         <?php
                                     } ?>
                                     <?php if ($GP['products-barcode']) {
